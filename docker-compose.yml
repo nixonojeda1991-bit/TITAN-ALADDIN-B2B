@@ -1,0 +1,39 @@
+services:
+  # SERVICIO 1: EL CEREBRO (Tu API original)
+  titan-core:
+    build: ./core_api
+    ports:
+      - "8000:8000"
+    depends_on:
+      - timescaledb
+    environment:
+      - GOOGLE_CLOUD_PROJECT=tcis-titan-12
+    volumes:
+      - ./core_api:/app
+
+  # SERVICIO 2: LA CARA (Nueva Terminal)
+  titan-terminal:
+    build: ./expansion_terminal
+    ports:
+      - "8501:8501"
+    depends_on:
+      - titan-core
+    environment:
+      - API_URL=http://titan-core:8000
+    # --- PARCHE DE SEGURIDAD APLICADO AQUI ---
+    command: streamlit run dashboard.py --server.port 8501 --server.address 0.0.0.0 --server.enableCORS false --server.enableXsrfProtection false
+
+  # SERVICIO 3: BASE DE DATOS (Compartida)
+  timescaledb:
+    image: timescale/timescaledb:latest-pg14
+    environment:
+      - POSTGRES_PASSWORD=password
+    volumes:
+      - ./data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5

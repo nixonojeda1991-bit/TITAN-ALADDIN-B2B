@@ -1,0 +1,8 @@
+fastapi
+uvicorn
+pandas
+yfinance
+ta
+sqlalchemy
+psycopg2-binary
+google-cloud-aiplatform
