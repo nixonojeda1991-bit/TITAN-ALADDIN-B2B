@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TITAN ALADDIN B2B | Sistema de Inteligencia Financiera</title>
+    
+    <!-- Tailwind CSS para estructura rápida -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Fuentes institucionales y tecnológicas -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300;400;700&family=Cinzel:wght@400;700&family=Inter:wght@300;600;900&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --blackrock-black: #0a0b0d;
+            --bloomberg-orange: #ff9500;
+            --institutional-gold: #D4AF37;
+            --terminal-green: #00ff41;
+            --grid-line: rgba(255, 255, 255, 0.05);
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            background-color: var(--blackrock-black);
+            color: #e0e0e0;
+            font-family: 'Inter', sans-serif;
+            overflow: hidden;
+            height: 100vh;
+        }
+
+        /* Fondo de seguridad */
+        #fallback-bg {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at center, #1a1b1f 0%, #0a0b0d 100%);
+            z-index: -2;
+        }
+
+        #financial-grid {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1;
+            background-image: 
+                linear-gradient(var(--grid-line) 1px, transparent 1px),
+                linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+            background-size: 40px 40px;
+            opacity: 0.3;
+        }
+
+        .glass-panel {
+            background: rgba(15, 20, 25, 0.85);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.8);
+        }
+
+        .font-brand { font-family: 'Cinzel', serif; }
+        .font-mono-tech { font-family: 'Roboto Mono', monospace; }
+
+        /* Animación de Ticker */
+        .ticker-wrap {
+            width: 100%; overflow: hidden; background: #000; border-bottom: 1px solid #222; white-space: nowrap;
+        }
+        .ticker { display: inline-block; animation: ticker 40s linear infinite; }
+        @keyframes ticker {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+        .ticker-item { display: inline-block; padding: 0 2rem; font-size: 0.7rem; font-family: 'Roboto Mono'; }
+
+        .btn-exec {
+            background: linear-gradient(180deg, #1a1a1a 0%, #000 100%);
+            border: 1px solid var(--institutional-gold);
+            color: var(--institutional-gold);
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        .btn-exec:hover {
+            background: var(--institutional-gold);
+            color: #000;
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
+        }
+
+        #terminal::-webkit-scrollbar { width: 4px; }
+        #terminal::-webkit-scrollbar-thumb { background: #333; }
+
+        canvas { display: block; opacity: 0; transition: opacity 1.5s ease-in; }
+        canvas.ready { opacity: 1; }
+    </style>
+</head>
+<body>
+
+    <div id="fallback-bg"></div>
+    <div id="financial-grid"></div>
+    <div id="canvas-container" class="fixed inset-0 z-0"></div>
+
+    <!-- UI Principal -->
+    <div class="relative z-10 flex flex-col h-screen">
+        
+        <!-- Ticker superior -->
+        <div class="ticker-wrap h-10 flex items-center">
+            <div class="ticker">
+                <span class="ticker-item text-white">BTC/USDT <span class="text-green-400">98,421.50 ▲</span></span>
+                <span class="ticker-item text-white">ETH/USDT <span class="text-green-400">3,450.12 ▲</span></span>
+                <span class="ticker-item text-white">TITAN FUND LP: <span class="text-[#D4AF37]">$142,500,000.00</span></span>
+                <span class="ticker-item text-white">SYSTEM STATUS: <span class="text-green-500">OPERATIONAL</span></span>
+                <!-- Duplicado para loop -->
+                <span class="ticker-item text-white">BTC/USDT <span class="text-green-400">98,421.50 ▲</span></span>
+                <span class="ticker-item text-white">TITAN FUND LP: <span class="text-[#D4AF37]">$142,500,000.00</span></span>
+            </div>
+        </div>
+
+        <div class="flex-1 flex p-6 gap-6 overflow-hidden">
+            
+            <!-- Sidebar Izquierda: Controles -->
+            <aside class="w-80 flex flex-col gap-6">
+                <div class="glass-panel p-6 border-l-4 border-[#D4AF37]">
+                    <h1 class="font-brand text-2xl text-white font-bold">TITAN ALADDIN</h1>
+                    <p class="text-[9px] text-gray-500 uppercase tracking-[0.3em] mt-1">Institutional Intelligence</p>
+                </div>
+
+                <div class="glass-panel p-6 flex-1 flex flex-col">
+                    <h2 class="text-[10px] text-gray-400 uppercase mb-6 tracking-widest font-bold">Parameters Setup</h2>
+                    
+                    <div class="space-y-8 flex-1">
+                        <div>
+                            <div class="flex justify-between text-[10px] mb-2 font-mono">
+                                <span>RISK EXPOSURE</span>
+                                <span id="risk-val" class="text-[#D4AF37]">30%</span>
+                            </div>
+                            <input type="range" class="w-full h-1 bg-gray-800 appearance-none cursor-pointer" 
+                                   oninput="document.getElementById('risk-val').innerText = this.value + '%'">
+                        </div>
+
+                        <div class="flex flex-col flex-1">
+                            <label class="text-[10px] text-gray-500 mb-2 uppercase font-mono">Investment Thesis / Prompt</label>
+                            <textarea id="strategy-input" 
+                                      class="flex-1 bg-black/40 border border-gray-800 p-4 text-xs font-mono text-[#D4AF37] outline-none focus:border-[#D4AF37] resize-none" 
+                                      placeholder="Describa su vector de estrategia aquí..."></textarea>
+                        </div>
+                    </div>
+
+                    <button onclick="ejecutarAnalisis()" class="btn-exec w-full py-4 text-[11px] font-bold mt-6">
+                        Ejecutar Algoritmo
+                    </button>
+                </div>
+            </aside>
+
+            <!-- Main: Visualización y Terminal -->
+            <main class="flex-1 flex flex-col gap-6 overflow-hidden">
+                
+                <!-- Visor Central -->
+                <div class="glass-panel flex-[3] relative overflow-hidden flex items-center justify-center">
+                    <div id="status-display" class="text-center">
+                        <div class="text-5xl font-brand text-gray-800/50 select-none">IDLE</div>
+                        <div class="text-[10px] text-gray-600 font-mono mt-2">WAITING FOR COMMAND VECTOR</div>
+                    </div>
+
+                    <!-- Panel de Pago (Oculto inicialmente) -->
+                    <div id="pay-panel" class="hidden absolute inset-0 bg-black/90 z-20 flex flex-col items-center justify-center p-10">
+                        <div class="max-w-md w-full border border-[#D4AF37]/40 p-10 text-center glass-panel shadow-[0_0_50px_rgba(0,0,0,1)]">
+                            <h3 class="font-brand text-2xl text-white mb-2">LICENCIA REQUERIDA</h3>
+                            <div class="w-16 h-1 bg-[#D4AF37] mx-auto mb-6"></div>
+                            <p class="text-[11px] text-gray-400 mb-8 font-mono leading-relaxed">
+                                Análisis de mercado completado con éxito. Para ejecutar órdenes en el nodo principal de liquidez, active su acceso B2B.
+                            </p>
+                            
+                            <div id="paypal-button-container" class="min-h-[50px]"></div>
+                            
+                            <p class="mt-6 text-[9px] text-gray-500 uppercase tracking-widest">
+                                Pago seguro procesado por PayPal Inc.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Terminal Inferior -->
+                <div class="glass-panel h-48 p-4 font-mono text-[10px] flex flex-col overflow-hidden">
+                    <div class="flex justify-between border-b border-gray-800 pb-2 mb-2 text-gray-600 font-bold">
+                        <span>INSTITUTIONAL TERMINAL LOG</span>
+                        <span>V.12.0.4 - LIVE</span>
+                    </div>
+                    <div id="terminal" class="flex-1 overflow-y-auto space-y-1 text-gray-500">
+                        <div>>> System handshake: OK</div>
+                        <div>>> Encryption layer: AES-256 ACTIVE</div>
+                        <div>>> Global market data feed: CONNECTED</div>
+                    </div>
+                </div>
+            </main>
+
+        </div>
+    </div>
+
+    <!-- Scripts de Terceros -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://www.paypal.com/sdk/js?client-id=BAA1vZa0wSM2Mz7GjGZTtvTJGjguge3Sbfq3HzEirH-logMDlVWhxdgxSZSo73-wnDVoSBJJLiZAIsv9Ck&components=hosted-buttons&currency=USD"></script>
+
+    <script>
+        // --- MOTOR 3D ---
+        let scene, camera, renderer, particles;
+
+        function initThree() {
+            const container = document.getElementById('canvas-container');
+            scene = new THREE.Scene();
+            camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
+            
+            renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(window.devicePixelRatio);
+            container.appendChild(renderer.domElement);
+
+            const geo = new THREE.BufferGeometry();
+            const pos = [];
+            for (let i = 0; i < 3000; i++) {
+                pos.push((Math.random() - 0.5) * 150, (Math.random() - 0.5) * 150, (Math.random() - 0.5) * 150);
+            }
+            geo.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+            
+            const mat = new THREE.PointsMaterial({ 
+                color: 0xD4AF37, 
+                size: 0.15,
+                transparent: true,
+                opacity: 0.6
+            });
+            
+            particles = new THREE.Points(geo, mat);
+            scene.add(particles);
+            camera.position.z = 80;
+
+            function animate() {
+                requestAnimationFrame(animate);
+                particles.rotation.y += 0.0005;
+                particles.rotation.x += 0.0002;
+                renderer.render(scene, camera);
+            }
+            animate();
+            setTimeout(() => renderer.domElement.classList.add('ready'), 100);
+        }
+
+        // --- LÓGICA DE TERMINAL ---
+        function writeLog(msg, type = 'normal') {
+            const term = document.getElementById('terminal');
+            const entry = document.createElement('div');
+            const time = new Date().toLocaleTimeString();
+            entry.innerHTML = `<span class="text-gray-700">[${time}]</span> <span class="${type === 'success' ? 'text-green-500' : 'text-gray-400'}">>> ${msg}</span>`;
+            term.appendChild(entry);
+            term.scrollTop = term.scrollHeight;
+        }
+
+        // --- ACCIÓN PRINCIPAL ---
+        function ejecutarAnalisis() {
+            const input = document.getElementById('strategy-input').value;
+            if(!input) {
+                writeLog("ERROR: Se requiere vector de estrategia para procesar.", "error");
+                return;
+            }
+
+            document.getElementById('status-display').innerHTML = `
+                <div class="flex flex-col items-center">
+                    <div class="w-12 h-12 border-2 border-[#D4AF37] border-t-transparent rounded-full animate-spin mb-4"></div>
+                    <div class="text-[#D4AF37] font-brand tracking-[0.5em] animate-pulse">ANALYZING MARKET DATA</div>
+                </div>
+            `;
+
+            writeLog("Iniciando escaneo de nodos de liquidez...");
+            
+            setTimeout(() => {
+                writeLog("Procesando tesis con motor cuántico...", "success");
+                setTimeout(() => {
+                    writeLog("Validando integridad de la transacción...", "success");
+                    setTimeout(() => {
+                        document.getElementById('pay-panel').classList.remove('hidden');
+                        renderPayPal();
+                    }, 1200);
+                }, 1000);
+            }, 1000);
+        }
+
+        function renderPayPal() {
+            const container = document.getElementById('paypal-button-container');
+            if (window.paypal && window.paypal.HostedButtons) {
+                container.innerHTML = '';
+                paypal.HostedButtons({
+                    hostedButtonId: "V7VP3T98HFVK4",
+                }).render("#paypal-button-container");
+            }
+        }
+
+        // Eventos Globales
+        window.onload = initThree;
+        window.onresize = () => {
+            if(camera && renderer) {
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+            }
+        };
+    </script>
+</body>
+</html>
