@@ -86,7 +86,7 @@
     </div>
 
     <script>
-        const apiKey = "";
+        const apiKey = ""; // La API Key se inyecta automáticamente en este entorno
         const model = "gemini-2.5-flash-preview-09-2025";
 
         async function executeTitan() {
@@ -109,6 +109,7 @@
 
             const systemPrompt = "ERES TITÁN ALADDIN ELITE. No adivines. Procesa el comando del Director con precisión absoluta. Si hay errores en el código o lógica que te pasen, identifícalos de inmediato. Responde en español de forma ejecutiva.";
 
+            // Sistema de Reintentos (Robustez)
             let retries = 5;
             let currentDelay = 1000;
 
@@ -137,7 +138,7 @@
                         retries--;
                         await new Promise(r => setTimeout(r, currentDelay));
                         currentDelay *= 2;
-                        return makeRequest();
+                        return makeRequest(); // Reintentar
                     }
                     throw err;
                 }
