@@ -7,51 +7,21 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --gold: #D4AF37;
-            --deep-black: #050505;
-            --terminal-green: #10b981;
-        }
-        body { 
-            background-color: var(--deep-black); 
-            color: #e4e4e7; 
-            font-family: 'Space Grotesk', sans-serif;
-            overflow: hidden;
-        }
+        :root { --gold: #D4AF37; --deep-black: #050505; --terminal-green: #10b981; }
+        body { background-color: var(--deep-black); color: #e4e4e7; font-family: 'Space Grotesk', sans-serif; overflow: hidden; }
         .mono { font-family: 'JetBrains Mono', monospace; }
-        .terminal-container {
-            border: 1px solid rgba(212, 175, 55, 0.2);
-            box-shadow: 0 0 50px rgba(0,0,0,0.8), inset 0 0 20px rgba(212, 175, 55, 0.05);
-        }
+        .terminal-container { border: 1px solid rgba(212, 175, 55, 0.2); box-shadow: 0 0 50px rgba(0,0,0,0.8), inset 0 0 20px rgba(212, 175, 55, 0.05); }
         .gold-glow { text-shadow: 0 0 15px rgba(214, 175, 55, 0.6); }
-        .scanline {
-            width: 100%;
-            height: 3px;
-            background: rgba(214, 175, 55, 0.15);
-            position: absolute;
-            animation: scan 6s linear infinite;
-            z-index: 50;
-            pointer-events: none;
-        }
-        @keyframes scan {
-            from { top: 0; }
-            to { top: 100%; }
-        }
-        .loading-bar {
-            width: 0%;
-            height: 100%;
-            background: var(--gold);
-            transition: width 0.4s ease;
-            box-shadow: 0 0 10px var(--gold);
-        }
-        /* Scrollbar táctica */
+        /* Efecto de Escaneo Láser */
+        .scanline { width: 100%; height: 3px; background: rgba(214, 175, 55, 0.15); position: absolute; animation: scan 6s linear infinite; z-index: 50; pointer-events: none; }
+        @keyframes scan { from { top: 0; } to { top: 100%; } }
+        .loading-bar { width: 0%; height: 100%; background: var(--gold); transition: width 0.4s ease; box-shadow: 0 0 10px var(--gold); }
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: #09090b; }
         ::-webkit-scrollbar-thumb { background: #3f3f46; border-radius: 3px; }
-        ::-webkit-scrollbar-thumb:hover { background: var(--gold); }
     </style>
 </head>
-<body class="h-screen flex flex-col p-2 md:p-6 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-zinc-900 via-black to-black selection:bg-yellow-500/30">
+<body class="h-screen flex flex-col p-2 md:p-6 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-zinc-900 via-black to-black">
 
     <div class="scanline"></div>
 
@@ -62,14 +32,10 @@
                     <span class="bg-gradient-to-r from-yellow-700 to-yellow-500 text-black px-3 skew-x-[-10deg] not-italic shadow-[0_0_15px_rgba(234,179,8,0.5)]">TITÁN</span>
                     <span class="text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-yellow-600 gold-glow">ALADDIN V3</span>
                 </h1>
-                <p class="mono text-[10px] text-zinc-500 mt-2 tracking-[0.4em] uppercase font-bold">
-                    SYSTEM: GEMINI-3-FLASH | STATUS: OPERATIONAL
-                </p>
+                <p class="mono text-[10px] text-zinc-500 mt-2 tracking-[0.4em] uppercase font-bold">SYSTEM: TITAN-CORE | STATUS: ONLINE</p>
             </div>
             <div class="text-right hidden md:block">
-                <p class="mono text-[10px] text-yellow-600 font-bold uppercase tracking-widest border border-yellow-900/30 px-2 py-1 rounded">
-                    DIRECTOR NIXON // ACCESO NIVEL 5
-                </p>
+                <p class="mono text-[10px] text-yellow-600 font-bold uppercase tracking-widest border border-yellow-900/30 px-2 py-1 rounded">DIRECTOR NIXON // ACCESO NIVEL 5</p>
                 <p id="clock" class="mono text-xs text-zinc-400 mt-1 uppercase"></p>
             </div>
         </div>
@@ -90,8 +56,8 @@
                     </div>
                     
                     <textarea id="userInput" 
-                        class="flex-1 bg-zinc-900/30 rounded border border-zinc-800 text-zinc-200 mono text-sm focus:ring-1 focus:ring-yellow-600/50 focus:border-yellow-600/50 resize-none p-4 placeholder-zinc-700 transition-all"
-                        placeholder="Ingrese activo o consulta estratégica..."></textarea>
+                        class="flex-1 bg-zinc-900/30 rounded border border-zinc-800 text-zinc-200 mono text-sm focus:ring-1 focus:ring-yellow-600/50 focus:border-yellow-600/50 resize-none p-4 placeholder-zinc-700 transition-all font-bold text-xl uppercase"
+                        placeholder="EJ: BTC-USD">BTC-USD</textarea>
                     
                     <div class="mt-6 flex flex-col gap-3">
                         <div class="h-1.5 bg-zinc-900 rounded-full overflow-hidden border border-zinc-800">
@@ -107,187 +73,109 @@
 
             <div class="lg:col-span-8 flex flex-col h-full min-h-0">
                 <div class="terminal-container bg-black/90 rounded-xl flex flex-col h-full overflow-hidden relative">
-                    <div class="absolute top-0 right-0 p-4 opacity-20 pointer-events-none">
-                        <svg width="100" height="100" viewBox="0 0 100 100" fill="none" stroke="#D4AF37" stroke-width="0.5">
-                            <circle cx="50" cy="50" r="40" stroke-dasharray="4 4" />
-                            <circle cx="50" cy="50" r="20" />
-                            <line x1="50" y1="0" x2="50" y2="100" />
-                            <line x1="0" y1="50" x2="100" y2="50" />
-                        </svg>
-                    </div>
-
-                    <div class="bg-zinc-900/60 px-5 py-3 flex justify-between items-center border-b border-zinc-800 backdrop-blur">
-                        <div class="flex gap-2">
-                            <div class="w-2.5 h-2.5 rounded-full bg-zinc-700 border border-zinc-600"></div>
-                            <div class="w-2.5 h-2.5 rounded-full bg-zinc-700 border border-zinc-600"></div>
+                    
+                    <div class="grid grid-cols-3 border-b border-zinc-800 bg-zinc-900/50">
+                        <div class="p-4 border-r border-zinc-800 text-center">
+                            <p class="text-[9px] text-zinc-500 uppercase">PRECIO ACTUAL</p>
+                            <p id="uiPrice" class="text-xl md:text-2xl font-bold text-white mt-1">---</p>
                         </div>
-                        <span class="text-[9px] mono text-yellow-600/70 tracking-[0.2em] uppercase font-bold">
-                            <i class="mr-2">⚡</i>Gemini 3 Flash Connected
-                        </span>
+                        <div class="p-4 border-r border-zinc-800 text-center">
+                            <p class="text-[9px] text-zinc-500 uppercase">RSI (FUERZA)</p>
+                            <p id="uiRSI" class="text-xl md:text-2xl font-bold text-blue-400 mt-1">---</p>
+                        </div>
+                        <div class="p-4 text-center relative overflow-hidden">
+                            <div class="absolute inset-0 bg-yellow-600/5"></div>
+                            <p class="text-[9px] text-yellow-600 uppercase relative z-10">ORDEN IA</p>
+                            <p id="uiSignal" class="text-xl md:text-2xl font-bold text-white mt-1 relative z-10">ESPERANDO</p>
+                        </div>
                     </div>
 
-                    <div id="outputDisplay" class="p-8 overflow-y-auto flex-1 mono text-sm leading-relaxed scroll-smooth">
-                        <div class="text-zinc-600 flex flex-col gap-2 h-full justify-center items-center opacity-50">
-                            <p class="animate-pulse tracking-widest">> SISTEMA EN ESPERA</p>
+                    <div id="outputDisplay" class="p-8 overflow-y-auto flex-1 mono text-sm leading-relaxed scroll-smooth relative">
+                         <div id="internalLoader" class="hidden absolute inset-0 bg-black/80 flex flex-col items-center justify-center z-20">
+                            <div class="text-yellow-500 animate-pulse font-bold tracking-widest">PROCESANDO INTELIGENCIA...</div>
+                         </div>
+                        <div id="logText" class="text-zinc-500 opacity-50 text-xs">
+                            > CONSOLA LISTA.<br>> ESPERANDO INSTRUCCIONES DEL DIRECTOR...
                         </div>
                     </div>
 
                     <div id="sources" class="px-6 py-4 bg-zinc-950 border-t border-zinc-800/50 flex flex-wrap gap-4 text-[9px] text-zinc-500 uppercase min-h-[3rem]">
-                        </div>
+                        <span class="text-green-900">FUENTE: YAHOO FINANCE GLOBAL PROTOCOL</span>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        // 1. RELOJ TÁCTICO
+        // 1. RELOJ EN TIEMPO REAL
         function updateClock() {
             const now = new Date();
-            document.getElementById('clock').innerText = now.toLocaleString('es-ES', { 
-                hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false 
-            }) + " ZULU";
+            document.getElementById('clock').innerText = now.toLocaleString('es-ES', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false }) + " ZULU";
         }
         setInterval(updateClock, 1000);
         updateClock();
 
-        // ==========================================
-        //      ZONA DE CREDENCIALES (MODIFICAR)
-        // ==========================================
-        
-        // ⚠️ PEGA TU CLAVE AQUÍ ABAJO (Dentro de las comillas)
-        const apiKey = "AIzaSyB3KzzyScDck44l8p7ovuEtU6YzdGNrGlk"; 
-        
-        // MOTOR ACTUALIZADO (DICIEMBRE 2025 - Informe Gemini 3)
-        const modelName = "gemini-3-flash-preview"; 
-
-        // ==========================================
-
+        // 2. FUNCIÓN DE EJECUCIÓN (LA SOLDADURA)
         async function execute() {
-            const input = document.getElementById('userInput').value;
-            const output = document.getElementById('outputDisplay');
+            const input = document.getElementById('userInput').value.trim();
+            const output = document.getElementById('logText');
             const btn = document.getElementById('execBtn');
             const loader = document.getElementById('loadingIndicator');
-            const sourcesDiv = document.getElementById('sources');
+            const internalLoader = document.getElementById('internalLoader');
 
-            if (!input.trim()) return;
-            if (apiKey === "AIzaSyB3KzzyScDck44l8p7ovuEtU6YzdGNrGlk" || apiKey === "") {
-                alert("⛔ ERROR DE SEGURIDAD: Debes pegar tu API KEY en el código (Línea 136)");
-                return;
-            }
+            if (!input) return;
 
-            // ESTADO: CARGANDO
+            // UI ESTADO: CARGANDO
             btn.disabled = true;
-            btn.innerHTML = `<span class="animate-pulse">PROCESANDO DATOS...</span>`;
-            loader.style.width = "45%";
-            sourcesDiv.innerHTML = "";
-            
-            output.innerHTML = `
-                <div class="flex flex-col gap-2 font-mono text-xs text-yellow-600/80 mt-4">
-                    <p>> Inicializando Gemini 3 Flash...</p>
-                    <p>> Bypassing Latency Protocols...</p>
-                    <p>> Real-time Grounding (Google Search) ACTIVO...</p>
-                    <div class="mt-4 p-2 border border-yellow-900/30 bg-yellow-900/10 rounded w-fit animate-pulse">
-                        > Analizando: "${input}"
-                    </div>
-                </div>`;
-
-            // INSTRUCCIÓN MAESTRA (Director Nixon)
-            const systemPrompt = `
-            ACTÚA COMO: TITÁN ALADDIN (Sistema de Inteligencia Financiera Soberana).
-            USUARIO: Director Nixon.
-            
-            OBJETIVO:
-            Proporcionar análisis de mercado de alta precisión, sin rodeos, con datos actualizados.
-            
-            REGLAS:
-            1. Usa Google Search para obtener el PRECIO EXACTO ACTUAL.
-            2. Analiza el Sentimiento y la Estructura Técnica.
-            3. Da una ORDEN FINAL (ACUMULAR / VENDER / ESPERAR).
-            4. Formato de salida: Markdown limpio. Usa tablas para números.
-            5. Tono: Profesional, Militar, Ejecutivo.
-            `;
-
-            let retries = 3;
-
-            async function callAI() {
-                const url = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${apiKey}`;
-                
-                const payload = {
-                    contents: [{ parts: [{ text: input }] }],
-                    systemInstruction: { parts: [{ text: systemPrompt }] },
-                    // Herramienta de Búsqueda de Google (Grounded)
-                    tools: [{ "google_search": {} }]
-                };
-
-                const response = await fetch(url, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-
-                if (!response.ok) {
-                    // Manejo de error 503 (Sobrecarga) o 429
-                    if (response.status >= 500 && retries > 0) {
-                        retries--;
-                        await new Promise(r => setTimeout(r, 2000));
-                        return callAI();
-                    }
-                    const errData = await response.json();
-                    throw new Error(errData.error?.message || `HTTP ${response.status}`);
-                }
-                return await response.json();
-            }
+            btn.innerHTML = "CONECTANDO CON NÚCLEO...";
+            loader.style.width = "60%";
+            internalLoader.classList.remove('hidden');
+            output.innerHTML = `<span class="text-yellow-600">> INICIANDO PROTOCOLO PARA ${input}...</span><br>`;
 
             try {
-                const data = await callAI();
-                loader.style.width = "85%";
-
-                // Extracción de datos
-                const text = data.candidates?.[0]?.content?.parts?.[0]?.text || "⚠️ EL ORÁCULO NO RESPONDIÓ.";
+                // --- AQUÍ OCURRE LA MAGIA ---
+                // La página web llama a tu motor Python interno (/aladdin)
+                // No usa API Keys en el navegador, usa el servidor seguro.
+                const response = await fetch(`/aladdin/${input}`);
+                const data = await response.json();
                 
-                // Fuentes (Grounding)
-                const attributions = data.candidates?.[0]?.groundingMetadata?.groundingAttributions || [];
-
                 loader.style.width = "100%";
                 
-                // Renderizado Final
-                // Convertimos Markdown básico a HTML simple para visualización
-                let formattedText = text
-                    .replace(/\*\*(.*?)\*\*/g, '<strong class="text-yellow-500">$1</strong>') // Negritas doradas
-                    .replace(/^# (.*$)/gim, '<h2 class="text-xl font-bold text-white border-b border-zinc-700 pb-2 mb-4 mt-2">$1</h2>') // Títulos
-                    .replace(/\n/g, '<br>');
+                if (data.error) throw new Error(data.error);
 
-                output.innerHTML = `
-                    <div class="animate-in fade-in duration-700">
-                        <div class="text-zinc-300 leading-relaxed">${formattedText}</div>
-                    </div>
-                `;
+                // --- ACTUALIZAR TARJETAS VISUALES ---
+                if (data.technical_analysis) {
+                    // Precio
+                    document.getElementById('uiPrice').innerText = "$" + data.technical_analysis.price.toLocaleString();
+                    
+                    // RSI (Color dinámico)
+                    const rsi = data.technical_analysis.rsi.toFixed(2);
+                    const rsiEl = document.getElementById('uiRSI');
+                    rsiEl.innerText = rsi;
+                    rsiEl.className = rsi > 70 ? "text-xl md:text-2xl font-bold text-red-500 mt-1" : (rsi < 30 ? "text-xl md:text-2xl font-bold text-green-500 mt-1" : "text-xl md:text-2xl font-bold text-blue-400 mt-1");
 
-                // Renderizado de Fuentes
-                if (attributions.length > 0) {
-                    sourcesDiv.innerHTML = `<span class="text-yellow-600 font-bold tracking-wider">FUENTES VERIFICADAS:</span>`;
-                    attributions.forEach((attr, idx) => {
-                        const url = attr.web?.uri;
-                        const title = attr.web?.title || "Fuente Externa";
-                        if (url) {
-                            sourcesDiv.innerHTML += `
-                                <a href="${url}" target="_blank" class="flex items-center gap-1 hover:text-white transition-colors bg-zinc-900 px-2 py-1 rounded border border-zinc-800 hover:border-yellow-600/50">
-                                    <span class="text-yellow-600">[${idx+1}]</span> ${title.substring(0, 25)}...
-                                </a>`;
-                        }
-                    });
+                    // Señal (Compra/Venta)
+                    const signal = data.suggestion || "NEUTRAL";
+                    const signalEl = document.getElementById('uiSignal');
+                    signalEl.innerText = signal.toUpperCase();
+                    
+                    if(signal.includes("VENTA")) signalEl.className = "text-xl md:text-2xl font-bold text-red-500 mt-1 animate-pulse relative z-10";
+                    else if(signal.includes("COMPRA")) signalEl.className = "text-xl md:text-2xl font-bold text-green-500 mt-1 animate-pulse relative z-10";
+                    else signalEl.className = "text-xl md:text-2xl font-bold text-white mt-1 relative z-10";
+                    
+                    // --- MOSTRAR LOG DETALLADO EN LA CONSOLA ---
+                    output.innerHTML += `<span class="text-green-500">> ANÁLISIS COMPLETADO.</span><br><br>`;
+                    // Imprimimos el JSON bonito
+                    output.innerHTML += `<div class="text-zinc-300 whitespace-pre-wrap">${JSON.stringify(data, null, 2)}</div>`;
                 }
 
             } catch (err) {
                 console.error(err);
-                output.innerHTML = `
-                    <div class="border-l-2 border-red-600 bg-red-900/10 p-6 rounded text-red-400 mono text-xs mt-4">
-                        <h3 class="font-bold text-lg mb-2">⛔ FALLO DE SISTEMA</h3>
-                        <p class="mb-2">CODE: ${err.message}</p>
-                        <p class="text-zinc-500">SUGERENCIA: Verifica que la API KEY sea correcta y que el modelo "gemini-3-flash-preview" esté habilitado en tu cuenta.</p>
-                    </div>`;
+                output.innerHTML += `<br><span class="text-red-500 bg-red-900/20 px-2">❌ ERROR CRÍTICO: ${err.message}</span>`;
             } finally {
                 setTimeout(() => { loader.style.width = "0%"; }, 800);
+                internalLoader.classList.add('hidden');
                 btn.disabled = false;
                 btn.innerText = "EJECUTAR ANÁLISIS V3";
             }
