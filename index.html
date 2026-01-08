@@ -2,50 +2,121 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TITÁN ALADDIN V3 | NIXON COMMAND</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;700&display=swap" rel="stylesheet">
     <style>
         :root { --gold: #D4AF37; --deep-black: #050505; }
-        body { background-color: var(--deep-black); color: #e4e4e7; font-family: 'Space Grotesk', sans-serif; }
+        body { 
+            background-color: var(--deep-black); 
+            color: #e4e4e7; 
+            font-family: 'Space Grotesk', sans-serif; 
+            overflow-x: hidden;
+        }
         .gold-border { border: 1px solid rgba(212, 175, 55, 0.3); }
         .gold-glow { text-shadow: 0 0 15px rgba(214, 175, 55, 0.6); }
+        .gold-bg { background: linear-gradient(135deg, #D4AF37 0%, #B8860B 100%); }
         .loading-pulse { animation: pulse 2s infinite; }
         @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-track { background: #0a0a0a; }
+        ::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--gold); }
     </style>
 </head>
-<body class="h-screen flex flex-col p-6 bg-black">
-    <div id="lockscreen" class="fixed inset-0 bg-black z-[100] flex flex-col items-center justify-center">
-        <h2 class="text-yellow-600 mb-4 tracking-[0.5em] text-xs">SISTEMA SOBERANO</h2>
-        <input type="password" id="adminKey" placeholder="CLAVE DE DIRECTOR" class="bg-zinc-900 border border-yellow-900/50 p-3 rounded text-center text-yellow-500 focus:outline-none">
-        <button onclick="unlock()" class="mt-4 text-xs text-zinc-500 hover:text-yellow-500 transition-all">ACCEDER AL PUENTE</button>
+<body class="min-h-screen flex flex-col p-4 md:p-8 bg-black">
+
+    <div id="lockscreen" class="fixed inset-0 bg-black z-[100] flex flex-col items-center justify-center p-6 text-center">
+        <div class="mb-8">
+            <h1 class="text-5xl font-black italic mb-2"><span class="bg-yellow-600 text-black px-2">TITÁN</span></h1>
+            <p class="text-yellow-600 tracking-[0.5em] text-[10px] font-bold uppercase">Soberanía Tecnológica B2B</p>
+        </div>
+        <div class="gold-border p-8 bg-zinc-950 rounded-2xl w-full max-w-md">
+            <h2 class="text-zinc-500 mb-6 tracking-widest text-xs uppercase">Identificación de Director</h2>
+            <input type="password" id="adminKey" placeholder="INGRESE CLAVE DE ACCESO" 
+                   class="w-full bg-zinc-900 border border-yellow-900/40 p-4 rounded-xl text-center text-yellow-500 text-xl focus:outline-none focus:border-yellow-500 transition-all">
+            <button onclick="unlock()" class="w-full mt-6 bg-yellow-600 hover:bg-yellow-500 text-black font-black py-4 rounded-xl transition-all uppercase tracking-tighter">
+                Acceder al Puente de Mando
+            </button>
+        </div>
+        <p class="mt-8 text-[9px] text-zinc-700 tracking-widest uppercase">© 2026 Nixon Ojeda | Arquitecto de Intención</p>
     </div>
 
     <div id="mainDashboard" class="hidden max-w-7xl mx-auto w-full flex flex-col gap-6">
-        <div class="flex justify-between items-end border-b border-yellow-900/30 pb-4">
-            <h1 class="text-4xl font-black italic"><span class="bg-yellow-600 text-black px-2">TITÁN</span> <span class="gold-glow text-yellow-500">ALADDIN V3</span></h1>
-            <div class="text-right">
-                <p class="text-[10px] text-yellow-600 font-bold uppercase tracking-widest">NIXON OJEDA // STATUS: SOBERANO</p>
+        
+        <div class="flex flex-col md:flex-row justify-between items-center border-b border-yellow-900/30 pb-6 gap-4">
+            <div>
+                <h1 class="text-5xl font-black italic leading-none"><span class="bg-yellow-600 text-black px-2">TITÁN</span> <span class="gold-glow text-yellow-500 uppercase">Aladdin V3</span></h1>
+                <p class="text-[10px] text-yellow-700 font-bold mt-2 tracking-widest uppercase">Sistema de Inteligencia Financiera Soberana</p>
+            </div>
+            <div class="text-center md:text-right">
+                <p class="text-[10px] text-zinc-500 font-bold uppercase tracking-widest">Operador Principal</p>
+                <p class="text-xl font-bold text-white tracking-tighter">NIXON OJEDA <span class="text-yellow-500 ml-2">●</span></p>
+                <p class="text-[9px] text-green-500 font-bold uppercase animate-pulse">Status: Soberano Online</p>
             </div>
         </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-            <div class="lg:col-span-4 flex flex-col gap-4">
-                <div class="gold-border bg-zinc-950 p-6 rounded-xl">
-                    <label class="text-[10px] text-yellow-600 font-bold uppercase mb-2 block">Ticker de Activo</label>
-                    <input id="tickerInput" value="BTC-USD" class="w-full bg-zinc-900 p-4 rounded border border-zinc-800 text-2xl font-bold text-yellow-500 mb-4 uppercase">
-                    <button id="execBtn" onclick="runAnalysis()" class="w-full bg-yellow-600 hover:bg-yellow-500 text-black font-bold py-4 rounded transition-all">EJECUTAR GOBERNANZA</button>
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            
+            <div class="lg:col-span-4 flex flex-col gap-6">
+                <div class="gold-border bg-zinc-950 p-6 rounded-2xl shadow-2xl">
+                    <label class="text-[10px] text-yellow-600 font-bold uppercase mb-3 block tracking-widest">Activo a Evaluar (Ticker)</label>
+                    <input id="tickerInput" value="BTC-USD" 
+                           class="w-full bg-zinc-900 p-5 rounded-xl border border-zinc-800 text-3xl font-black text-yellow-500 mb-4 uppercase focus:outline-none focus:border-yellow-600">
+                    <button id="execBtn" onclick="runAnalysis()" 
+                            class="w-full bg-yellow-600 hover:bg-yellow-500 text-black font-black py-5 rounded-xl transition-all shadow-lg text-lg uppercase">
+                        Ejecutar Gobernanza
+                    </button>
+                    
+                    <button onclick="runRadar()" 
+                            class="w-full mt-4 bg-zinc-900 hover:bg-zinc-800 text-yellow-600 font-bold py-3 rounded-xl border border-yellow-900/20 transition-all text-xs uppercase tracking-widest">
+                        Activar Radar Global B2B
+                    </button>
+                </div>
+
+                <div class="gold-border bg-zinc-950/50 p-6 rounded-2xl text-[10px] leading-relaxed text-zinc-500">
+                    <p class="mb-2 uppercase font-bold text-yellow-900">Protocolo de Intención:</p>
+                    <p class="italic">"Dos espejos se miran y el pez respira por el agua."</p>
+                    <div class="mt-4 pt-4 border-t border-zinc-900">
+                        <p>MOTOR: GEMINI 2.5 STABLE</p>
+                        <p>NÚCLEO: VERTEX AI CLOUD</p>
+                        <p>REGIÓN: US-CENTRAL1</p>
+                    </div>
                 </div>
             </div>
 
-            <div class="lg:col-span-8">
-                <div class="gold-border bg-zinc-950 rounded-xl overflow-hidden">
-                    <div class="grid grid-cols-3 bg-zinc-900/50 border-b border-zinc-800">
-                        <div class="p-4 border-r border-zinc-800 text-center"><p class="text-[9px] text-zinc-500">PRECIO</p><p id="priceDisplay" class="text-2xl font-bold">---</p></div>
-                        <div class="p-4 border-r border-zinc-800 text-center"><p class="text-[9px] text-zinc-500">STATUS</p><p id="statusDisplay" class="text-2xl font-bold text-blue-400">OFFLINE</p></div>
-                        <div class="p-4 text-center"><p class="text-[9px] text-yellow-600">ORDEN IA</p><p id="signalDisplay" class="text-2xl font-bold">ESPERANDO</p></div>
+            <div class="lg:col-span-8 flex flex-col gap-6">
+                <div class="gold-border bg-zinc-950 rounded-2xl overflow-hidden shadow-2xl">
+                    <div class="grid grid-cols-3 bg-zinc-900/50 border-b border-zinc-900">
+                        <div class="p-6 border-r border-zinc-900 text-center">
+                            <p class="text-[10px] text-zinc-500 uppercase tracking-widest mb-1 font-bold">Último Precio</p>
+                            <p id="priceDisplay" class="text-3xl font-black text-white">---</p>
+                        </div>
+                        <div class="p-6 border-r border-zinc-900 text-center">
+                            <p class="text-[10px] text-zinc-500 uppercase tracking-widest mb-1 font-bold">Estado Conexión</p>
+                            <p id="statusDisplay" class="text-3xl font-black text-blue-500 uppercase">Offline</p>
+                        </div>
+                        <div class="p-6 text-center">
+                            <p class="text-[10px] text-yellow-600 uppercase tracking-widest mb-1 font-bold">Veredicto IA</p>
+                            <p id="signalDisplay" class="text-3xl font-black text-zinc-700">ESPERANDO</p>
+                        </div>
                     </div>
-                    <div id="analysisOutput" class="p-8 h-96 overflow-y-auto text-sm text-zinc-400 leading-relaxed font-light">
-                        > Esperando órdenes del Director Nixon...
+
+                    <div id="analysisOutput" class="p-8 h-[500px] overflow-y-auto text-sm md:text-base text-zinc-400 leading-relaxed font-light scroll-smooth">
+                        <p class="opacity-30 italic">> Esperando instrucciones del Arquitecto...</p>
+                    </div>
+                </div>
+
+                <div id="radarSection" class="hidden gold-border bg-zinc-950 p-8 rounded-2xl shadow-2xl animate-fade-in">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="text-yellow-600 text-xs font-black uppercase tracking-[0.3em]">Salud Sistémica del Océano (B2B)</h3>
+                        <span class="text-[8px] px-2 py-1 bg-yellow-600/10 text-yellow-600 rounded">LIVE SCAN</span>
+                    </div>
+                    <div id="radarTable" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 mb-8">
+                        </div>
+                    <div id="radarGlobalAnalysis" class="text-xs text-zinc-400 bg-black/40 p-6 rounded-xl border border-zinc-900 italic leading-loose">
+                        Consultando la salud del océano global...
                     </div>
                 </div>
             </div>
@@ -53,57 +124,100 @@
     </div>
 
     <script>
+        // CONFIGURACIÓN CENTRAL
+        const CLOUD_RUN_URL = "https://titan-aladdin-298942508038.us-central1.run.app";
+        const MASTER_KEY = "2026";
+
         function unlock() {
             const key = document.getElementById('adminKey').value;
-            // SU CLAVE DE ACCESO
-            if(key === "2026") { 
-                document.getElementById('lockscreen').classList.add('hidden');
+            if(key === MASTER_KEY) { 
+                document.getElementById('lockscreen').style.display = 'none';
                 document.getElementById('mainDashboard').classList.remove('hidden');
-            } else { alert("ACCESO DENEGADO"); }
+            } else { 
+                alert("ACCESO DENEGADO: CLAVE DE DIRECTOR INVÁLIDA"); 
+            }
         }
 
         async function runAnalysis() {
             const ticker = document.getElementById('tickerInput').value;
             const btn = document.getElementById('execBtn');
             const output = document.getElementById('analysisOutput');
+            const priceEl = document.getElementById('priceDisplay');
+            const statusEl = document.getElementById('statusDisplay');
+            const signalEl = document.getElementById('signalDisplay');
             
-            btn.innerText = "CONSULTANDO AL BÚNKER...";
+            btn.innerText = "PROCESANDO GOBERNANZA...";
             btn.disabled = true;
-            output.innerHTML = "<p class='loading-pulse'>[SISTEMA] Estableciendo conexión con Vertex AI y Kucoin...</p>";
+            output.innerHTML = "<div class='loading-pulse text-yellow-600'>[SISTEMA] Sincronizando con el Búnker en Google Cloud...<br>[INFO] Aplicando filtros de riesgo B2B...<br>[INFO] Consultando Oráculo Vertex AI...</div>";
 
             try {
-                // URL PERMANENTE DE SU BÚNKER EN GOOGLE CLOUD RUN
-                const urlApi = `https://titan-aladdin-298942508038.us-central1.run.app/aladdin/${ticker}`;
-                
-                const res = await fetch(urlApi);
+                const res = await fetch(`${CLOUD_RUN_URL}/aladdin/${ticker}`);
                 const data = await res.json();
                 
-                // Actualizar Interfaz
-                document.getElementById('priceDisplay').innerText = "$" + (data.price ? data.price.toLocaleString() : "---");
-                document.getElementById('statusDisplay').innerText = "ONLINE";
-                document.getElementById('statusDisplay').classList.replace('text-blue-400', 'text-green-500');
+                // Actualización de UI
+                priceEl.innerText = "$" + (data.price ? data.price.toLocaleString() : "---");
+                statusEl.innerText = "ONLINE";
+                statusEl.className = "text-3xl font-black text-green-500 uppercase";
                 
-                // Formatear el análisis para que los saltos de línea se vean bien
-                output.innerHTML = `<div class="prose prose-invert max-w-none text-zinc-300">
-                    ${data.analysis.replace(/\n/g, '<br>')}
-                </div>`;
+                // Formateo de Análisis (Markdown simple a HTML)
+                let formattedText = data.analysis
+                    .replace(/\*\*(.*?)\*\*/g, '<b class="text-yellow-500">$1</b>') // Bolding
+                    .replace(/\n/g, '<br>'); // New lines
                 
-                // Lógica de Señal Mejorada
+                output.innerHTML = `<div class="animate-fade-in">${formattedText}</div>`;
+                
+                // Lógica de Señal Inteligente
                 let signal = "NEUTRO";
                 const texto = data.analysis.toUpperCase();
                 if(texto.includes("COMPRA") || texto.includes("OPORTUNIDAD")) signal = "COMPRA";
-                if(texto.includes("VENTA") || texto.includes("CAUTELA") || texto.includes("RIESGO")) signal = "RIESGO";
+                if(texto.includes("RIESGO") || texto.includes("CAUTELA") || texto.includes("VENTA")) signal = "RIESGO";
                 
-                const signalEl = document.getElementById('signalDisplay');
                 signalEl.innerText = signal;
-                signalEl.className = `text-2xl font-bold ${signal === 'RIESGO' ? 'text-red-500' : (signal === 'COMPRA' ? 'text-green-500' : 'text-yellow-500')}`;
+                signalEl.className = `text-3xl font-black ${signal === 'RIESGO' ? 'text-red-500' : (signal === 'COMPRA' ? 'text-green-500' : 'text-yellow-600')}`;
                 
             } catch (e) {
-                output.innerHTML = `<p class="text-red-500">> ERROR CRÍTICO: El Pez no pudo llegar al agua. Verifique la conexión del Búnker.</p>`;
+                output.innerHTML = `<p class="text-red-600 font-bold uppercase tracking-widest text-xs">❌ ERROR CRÍTICO: No se pudo establecer conexión con el búnker soberano.</p>`;
                 console.error(e);
             } finally {
-                btn.innerText = "EJECUTAR GOBERNANZA";
+                btn.innerText = "Ejecutar Gobernanza";
                 btn.disabled = false;
+            }
+        }
+
+        async function runRadar() {
+            const radarSec = document.getElementById('radarSection');
+            const radarTable = document.getElementById('radarTable');
+            const radarAnalysis = document.getElementById('radarGlobalAnalysis');
+            
+            radarSec.classList.remove('hidden');
+            radarAnalysis.innerHTML = "<span class='loading-pulse text-yellow-600'>🌀 ANALIZANDO SALUD SISTÉMICA DEL MERCADO GLOBAL...</span>";
+            
+            try {
+                const res = await fetch(`${CLOUD_RUN_URL}/radar`);
+                const data = await res.json();
+                
+                // Dibujar Tabla de Radar
+                radarTable.innerHTML = data.radar.map(coin => `
+                    <div class="bg-zinc-900/50 p-4 rounded-xl border border-zinc-800 text-center hover:border-yellow-600/30 transition-all">
+                        <p class="text-[9px] text-zinc-500 font-bold mb-1">${coin.symbol}</p>
+                        <p class="text-lg font-black text-white">$${coin.price.toLocaleString()}</p>
+                        <p class="text-[10px] font-bold ${coin.change >= 0 ? 'text-green-500' : 'text-red-500'}">
+                            ${coin.change >= 0 ? '▲' : '▼'} ${coin.change.toFixed(2)}%
+                        </p>
+                    </div>
+                `).join('');
+                
+                // Inyectar Análisis Global de Riesgo
+                radarAnalysis.innerHTML = `<div class="text-zinc-300 leading-relaxed">
+                    <b class="text-yellow-600 uppercase tracking-widest block mb-2 font-black text-[10px]">Veredicto Sistémico:</b>
+                    ${data.global_analysis.replace(/\n/g, '<br>')}
+                </div>`;
+                
+                // Desplazar suavemente hacia el radar
+                radarSec.scrollIntoView({ behavior: 'smooth' });
+                
+            } catch (e) {
+                radarAnalysis.innerHTML = "❌ ERROR: El radar no pudo completar el escaneo del océano.";
             }
         }
     </script>
