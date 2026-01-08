@@ -23,14 +23,16 @@
     <div id="mainDashboard" class="hidden max-w-7xl mx-auto w-full flex flex-col gap-6">
         <div class="flex justify-between items-end border-b border-yellow-900/30 pb-4">
             <h1 class="text-4xl font-black italic"><span class="bg-yellow-600 text-black px-2">TITÁN</span> <span class="gold-glow text-yellow-500">ALADDIN V3</span></h1>
-            <div class="text-right"><p class="text-[10px] text-yellow-600 font-bold uppercase tracking-widest">NIXON OJEDA // STATUS: SOBERANO</p></div>
+            <div class="text-right">
+                <p class="text-[10px] text-yellow-600 font-bold uppercase tracking-widest">NIXON OJEDA // STATUS: SOBERANO</p>
+            </div>
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
             <div class="lg:col-span-4 flex flex-col gap-4">
                 <div class="gold-border bg-zinc-950 p-6 rounded-xl">
                     <label class="text-[10px] text-yellow-600 font-bold uppercase mb-2 block">Ticker de Activo</label>
-                    <input id="tickerInput" value="BTC-USD" class="w-full bg-zinc-900 p-4 rounded border border-zinc-800 text-2xl font-bold text-yellow-500 mb-4">
+                    <input id="tickerInput" value="BTC-USD" class="w-full bg-zinc-900 p-4 rounded border border-zinc-800 text-2xl font-bold text-yellow-500 mb-4 uppercase">
                     <button id="execBtn" onclick="runAnalysis()" class="w-full bg-yellow-600 hover:bg-yellow-500 text-black font-bold py-4 rounded transition-all">EJECUTAR GOBERNANZA</button>
                 </div>
             </div>
@@ -39,10 +41,10 @@
                 <div class="gold-border bg-zinc-950 rounded-xl overflow-hidden">
                     <div class="grid grid-cols-3 bg-zinc-900/50 border-b border-zinc-800">
                         <div class="p-4 border-r border-zinc-800 text-center"><p class="text-[9px] text-zinc-500">PRECIO</p><p id="priceDisplay" class="text-2xl font-bold">---</p></div>
-                        <div class="p-4 border-r border-zinc-800 text-center"><p class="text-[9px] text-zinc-500">RSI</p><p id="rsiDisplay" class="text-2xl font-bold text-blue-400">---</p></div>
+                        <div class="p-4 border-r border-zinc-800 text-center"><p class="text-[9px] text-zinc-500">STATUS</p><p id="statusDisplay" class="text-2xl font-bold text-blue-400">OFFLINE</p></div>
                         <div class="p-4 text-center"><p class="text-[9px] text-yellow-600">ORDEN IA</p><p id="signalDisplay" class="text-2xl font-bold">ESPERANDO</p></div>
                     </div>
-                    <div id="analysisOutput" class="p-8 h-64 overflow-y-auto text-sm text-zinc-400 italic">
+                    <div id="analysisOutput" class="p-8 h-96 overflow-y-auto text-sm text-zinc-400 leading-relaxed font-light">
                         > Esperando órdenes del Director Nixon...
                     </div>
                 </div>
@@ -53,7 +55,8 @@
     <script>
         function unlock() {
             const key = document.getElementById('adminKey').value;
-            if(key === "2026") { // TU CLAVE PRIVADA
+            // SU CLAVE DE ACCESO
+            if(key === "2026") { 
                 document.getElementById('lockscreen').classList.add('hidden');
                 document.getElementById('mainDashboard').classList.remove('hidden');
             } else { alert("ACCESO DENEGADO"); }
@@ -62,23 +65,42 @@
         async function runAnalysis() {
             const ticker = document.getElementById('tickerInput').value;
             const btn = document.getElementById('execBtn');
-            btn.innerText = "PROCESANDO...";
+            const output = document.getElementById('analysisOutput');
+            
+            btn.innerText = "CONSULTANDO AL BÚNKER...";
             btn.disabled = true;
+            output.innerHTML = "<p class='loading-pulse'>[SISTEMA] Estableciendo conexión con Vertex AI y Kucoin...</p>";
 
             try {
-                // CAMBIA ESTA URL POR TU URL DE GOOGLE CLOUD RUN
-                const res = await fetch(`http://localhost:8000/aladdin/${ticker}`);
+                // URL PERMANENTE DE SU BÚNKER EN GOOGLE CLOUD RUN
+                const urlApi = `https://titan-aladdin-298942508038.us-central1.run.app/aladdin/${ticker}`;
+                
+                const res = await fetch(urlApi);
                 const data = await res.json();
                 
-                document.getElementById('priceDisplay').innerText = "$" + data.price.toLocaleString();
-                document.getElementById('rsiDisplay').innerText = data.rsi.toFixed(2);
-                document.getElementById('analysisOutput').innerText = data.analysis;
+                // Actualizar Interfaz
+                document.getElementById('priceDisplay').innerText = "$" + (data.price ? data.price.toLocaleString() : "---");
+                document.getElementById('statusDisplay').innerText = "ONLINE";
+                document.getElementById('statusDisplay').classList.replace('text-blue-400', 'text-green-500');
                 
-                const signal = data.analysis.includes("COMPRA") ? "COMPRA" : (data.analysis.includes("VENTA") ? "VENTA" : "NEUTRO");
-                document.getElementById('signalDisplay').innerText = signal;
-                document.getElementById('signalDisplay').className = `text-2xl font-bold ${signal === 'VENTA' ? 'text-red-500' : 'text-green-500'}`;
+                // Formatear el análisis para que los saltos de línea se vean bien
+                output.innerHTML = `<div class="prose prose-invert max-w-none text-zinc-300">
+                    ${data.analysis.replace(/\n/g, '<br>')}
+                </div>`;
+                
+                // Lógica de Señal Mejorada
+                let signal = "NEUTRO";
+                const texto = data.analysis.toUpperCase();
+                if(texto.includes("COMPRA") || texto.includes("OPORTUNIDAD")) signal = "COMPRA";
+                if(texto.includes("VENTA") || texto.includes("CAUTELA") || texto.includes("RIESGO")) signal = "RIESGO";
+                
+                const signalEl = document.getElementById('signalDisplay');
+                signalEl.innerText = signal;
+                signalEl.className = `text-2xl font-bold ${signal === 'RIESGO' ? 'text-red-500' : (signal === 'COMPRA' ? 'text-green-500' : 'text-yellow-500')}`;
+                
             } catch (e) {
-                alert("Error de conexión con el Núcleo Titán.");
+                output.innerHTML = `<p class="text-red-500">> ERROR CRÍTICO: El Pez no pudo llegar al agua. Verifique la conexión del Búnker.</p>`;
+                console.error(e);
             } finally {
                 btn.innerText = "EJECUTAR GOBERNANZA";
                 btn.disabled = false;
