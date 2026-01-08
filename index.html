@@ -15,6 +15,8 @@
         @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
         .fade-in { animation: fadeIn 0.5s ease-out; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
     </style>
 </head>
 <body class="min-h-screen flex flex-col p-4 md:p-8 bg-black">
@@ -32,7 +34,7 @@
         <div class="flex flex-col md:flex-row justify-between items-center border-b border-yellow-900/20 pb-8 gap-6">
             <h1 class="text-5xl font-black italic"><span class="bg-yellow-600 text-black px-2">TITÁN</span> <span class="gold-glow text-yellow-500 uppercase">Aladdin V3</span></h1>
             <div class="text-right font-bold uppercase tracking-widest text-[10px]">
-                <p class="text-zinc-500">Operador</p>
+                <p class="text-zinc-500">Operador Principal</p>
                 <p class="text-xl text-white">NIXON OJEDA ●</p>
             </div>
         </div>
@@ -41,7 +43,6 @@
             <div class="lg:col-span-4 flex flex-col gap-6">
                 <div class="gold-border bg-zinc-950 p-8 rounded-3xl shadow-2xl">
                     <label class="text-[10px] text-yellow-600 font-bold uppercase mb-4 block tracking-widest">Seleccionar Activo B2B</label>
-                    
                     <select id="tickerSelect" class="w-full bg-zinc-900 p-6 rounded-2xl border border-zinc-800 text-2xl font-black text-yellow-500 mb-6 focus:outline-none appearance-none cursor-pointer">
                         <option value="BTC-USD">BITCOIN (BTC)</option>
                         <option value="ETH-USD">ETHEREUM (ETH)</option>
@@ -74,11 +75,11 @@
                         </div>
                         <div class="p-8 border-r border-zinc-900">
                             <p class="text-[10px] text-zinc-500 uppercase font-bold mb-2">Status</p>
-                            <p id="statusDisplay" class="text-3xl font-black text-zinc-800 uppercase font-bold">Standby</p>
+                            <p id="statusDisplay" class="text-3xl font-black text-zinc-800 uppercase">Standby</p>
                         </div>
                         <div class="p-8">
                             <p class="text-[10px] text-yellow-600 uppercase font-bold mb-2">Veredicto</p>
-                            <p id="signalDisplay" class="text-3xl font-black text-zinc-800 uppercase font-bold">Waiting</p>
+                            <p id="signalDisplay" class="text-3xl font-black text-zinc-800 uppercase">Waiting</p>
                         </div>
                     </div>
                     <div id="analysisOutput" class="p-10 h-[500px] overflow-y-auto text-base text-zinc-400 leading-relaxed font-light scroll-smooth">
@@ -87,13 +88,13 @@
                 </div>
 
                 <div id="radarSection" class="hidden gold-border bg-zinc-950 p-10 rounded-3xl shadow-2xl">
-                    <h3 id="radarTitle" class="text-yellow-600 text-[11px] font-black uppercase tracking-[0.4em] mb-10 text-center">Escaneo Sistémico Global</h3>
+                    <h3 class="text-yellow-600 text-[11px] font-black uppercase tracking-[0.4em] mb-10 text-center">Escaneo Sistémico Global</h3>
                     <div id="radarTable" class="grid grid-cols-2 md:grid-cols-5 gap-4 mb-10"></div>
                     <div class="bg-black/50 p-8 rounded-2xl border border-zinc-900 mb-6">
                         <div id="radarGlobalAnalysis" class="text-sm text-zinc-500 italic leading-loose"></div>
                     </div>
                     <button id="nextBatchBtn" onclick="runNextBatch()" class="hidden w-full bg-zinc-900 hover:bg-yellow-600 text-yellow-500 hover:text-black font-black py-4 rounded-2xl transition-all border border-yellow-900/20 uppercase text-xs">
-                        Escanear Siguiente Lote (5 Activos)
+                        Escanear Siguiente Lote
                     </button>
                 </div>
             </div>
@@ -127,12 +128,20 @@
                 let cleanText = data.analysis.replace(/\*\*(.*?)\*\*/g, '<b class="text-white">$1</b>').replace(/\n/g, '<br>');
                 document.getElementById('analysisOutput').innerHTML = `<div class="fade-in text-zinc-300">${cleanText}</div>`;
                 
+                // LÓGICA DE SEÑAL MEJORADA (Prioridad al Riesgo)
                 let signal = "NEUTRO";
-                if(data.analysis.toUpperCase().includes("RIESGO") || data.analysis.toUpperCase().includes("CAUTELA")) signal = "RIESGO";
-                if(data.analysis.toUpperCase().includes("COMPRA") || data.analysis.toUpperCase().includes("OPORTUNIDAD")) signal = "COMPRA";
+                const texto = data.analysis.toUpperCase();
                 
-                document.getElementById('signalDisplay').innerText = signal;
-                document.getElementById('signalDisplay').className = `text-3xl font-black ${signal === 'RIESGO' ? 'text-red-500' : (signal === 'COMPRA' ? 'text-green-500' : 'text-yellow-600')}`;
+                // Si el texto sugiere venta o riesgo, marcamos RIESGO sin importar lo demás
+                if(texto.includes("RIESGO") || texto.includes("CAUTELA") || texto.includes("VENTA") || texto.includes("CORTA") || texto.includes("LIQUIDACIÓN")) {
+                    signal = "RIESGO";
+                } else if(texto.includes("COMPRA") || texto.includes("OPORTUNIDAD")) {
+                    signal = "COMPRA";
+                }
+                
+                const sigEl = document.getElementById('signalDisplay');
+                sigEl.innerText = signal;
+                sigEl.className = `text-3xl font-black ${signal === 'RIESGO' ? 'text-red-500' : (signal === 'COMPRA' ? 'text-green-500' : 'text-yellow-600')}`;
             } catch (e) { document.getElementById('analysisOutput').innerText = "Error de conexión."; }
             finally { btn.innerText = "Ejecutar Gobernanza"; btn.disabled = false; }
         }
@@ -140,10 +149,6 @@
         function initRadar() {
             currentOffset = 0;
             document.getElementById('radarTable').innerHTML = "";
-            runRadarBatch();
-        }
-
-        async function runNextBatch() {
             runRadarBatch();
         }
 
@@ -171,7 +176,7 @@
                     `;
                 });
 
-                radarAnalysis.innerHTML = `> Lote ${currentOffset/5 + 1}: <br>${data.global_analysis.replace(/\n/g, '<br>')}`;
+                radarAnalysis.innerHTML = `> Informe Lote ${currentOffset/5 + 1}: <br>${data.global_analysis.replace(/\n/g, '<br>')}`;
                 currentOffset = data.next_offset;
                 
                 if(currentOffset) {
