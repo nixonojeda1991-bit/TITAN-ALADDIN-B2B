@@ -8,110 +8,93 @@
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;700&display=swap" rel="stylesheet">
     <style>
         :root { --gold: #D4AF37; --deep-black: #050505; }
-        body { 
-            background-color: var(--deep-black); 
-            color: #e4e4e7; 
-            font-family: 'Space Grotesk', sans-serif; 
-            overflow-x: hidden;
-        }
+        body { background-color: var(--deep-black); color: #e4e4e7; font-family: 'Space Grotesk', sans-serif; }
         .gold-border { border: 1px solid rgba(212, 175, 55, 0.3); }
         .gold-glow { text-shadow: 0 0 15px rgba(214, 175, 55, 0.6); }
         .loading-pulse { animation: pulse 2s infinite; }
         @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
-        ::-webkit-scrollbar { width: 4px; }
-        ::-webkit-scrollbar-track { background: #050505; }
-        ::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
-        ::-webkit-scrollbar-thumb:hover { background: var(--gold); }
-        .fade-in { animation: fadeIn 0.8s ease-in-out; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .fade-in { animation: fadeIn 0.5s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     </style>
 </head>
 <body class="min-h-screen flex flex-col p-4 md:p-8 bg-black">
 
-    <div id="lockscreen" class="fixed inset-0 bg-black z-[100] flex flex-col items-center justify-center p-6">
-        <div class="mb-10 text-center text-white">
-            <h1 class="text-6xl font-black italic tracking-tighter mb-2">
-                <span class="bg-yellow-600 text-black px-3">TITÁN</span>
-            </h1>
-            <p class="text-yellow-600 tracking-[0.6em] text-[9px] font-bold uppercase opacity-80">Soberanía de Datos B2B</p>
-        </div>
-        <div class="gold-border p-10 bg-zinc-950/80 backdrop-blur-xl rounded-3xl w-full max-w-sm shadow-2xl">
-            <input type="password" id="adminKey" placeholder="CLAVE DE ACCESO" 
-                   class="w-full bg-zinc-900 border border-yellow-900/30 p-5 rounded-2xl text-center text-yellow-500 text-2xl focus:outline-none focus:border-yellow-600 transition-all font-bold tracking-widest">
-            <button onclick="unlock()" class="w-full mt-6 bg-yellow-600 hover:bg-yellow-500 text-black font-black py-5 rounded-2xl transition-all uppercase text-xs tracking-widest">
-                Acceder al Puente de Mando
-            </button>
+    <div id="lockscreen" class="fixed inset-0 bg-black z-[100] flex flex-col items-center justify-center p-6 text-white text-center">
+        <h1 class="text-6xl font-black italic mb-2"><span class="bg-yellow-600 text-black px-3">TITÁN</span></h1>
+        <div class="gold-border p-10 bg-zinc-950 rounded-3xl w-full max-w-sm">
+            <input type="password" id="adminKey" placeholder="CLAVE DE DIRECTOR" class="w-full bg-zinc-900 border border-yellow-900/30 p-5 rounded-2xl text-center text-yellow-500 text-2xl focus:outline-none mb-6">
+            <button onclick="unlock()" class="w-full bg-yellow-600 text-black font-black py-4 rounded-2xl uppercase text-xs tracking-widest">Acceder al Puente</button>
         </div>
     </div>
 
     <div id="mainDashboard" class="hidden max-w-7xl mx-auto w-full flex flex-col gap-8 fade-in text-white">
         
         <div class="flex flex-col md:flex-row justify-between items-center border-b border-yellow-900/20 pb-8 gap-6">
-            <div class="text-center md:text-left">
-                <h1 class="text-5xl font-black italic"><span class="bg-yellow-600 text-black px-2">TITÁN</span> <span class="gold-glow text-yellow-500 uppercase">Aladdin V3</span></h1>
-                <p class="text-[10px] text-yellow-700 font-bold mt-2 tracking-widest uppercase">Inteligencia Financiera de Grado Militar</p>
-            </div>
-            <div class="flex items-center gap-6 bg-zinc-900/30 p-4 rounded-2xl border border-zinc-800/50">
-                <div class="text-right">
-                    <p class="text-[9px] text-zinc-500 uppercase font-bold tracking-widest">Director Ejecutivo</p>
-                    <p class="text-lg font-bold text-white tracking-tighter">NIXON OJEDA</p>
-                </div>
-                <div class="h-10 w-10 rounded-full bg-yellow-600 flex items-center justify-center font-black text-black">NO</div>
+            <h1 class="text-5xl font-black italic"><span class="bg-yellow-600 text-black px-2">TITÁN</span> <span class="gold-glow text-yellow-500 uppercase">Aladdin V3</span></h1>
+            <div class="text-right font-bold uppercase tracking-widest text-[10px]">
+                <p class="text-zinc-500">Operador</p>
+                <p class="text-xl text-white">NIXON OJEDA ●</p>
             </div>
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
-            
             <div class="lg:col-span-4 flex flex-col gap-6">
                 <div class="gold-border bg-zinc-950 p-8 rounded-3xl shadow-2xl">
-                    <label class="text-[10px] text-yellow-600 font-bold uppercase mb-4 block tracking-[0.2em]">Activo Estratégico</label>
-                    <input id="tickerInput" value="BTC-USD" 
-                           class="w-full bg-zinc-900 p-6 rounded-2xl border border-zinc-800 text-4xl font-black text-yellow-500 mb-6 uppercase focus:outline-none">
-                    <button id="execBtn" onclick="runAnalysis()" 
-                            class="w-full bg-yellow-600 hover:bg-yellow-500 text-black font-black py-6 rounded-2xl transition-all shadow-xl text-lg uppercase">
+                    <label class="text-[10px] text-yellow-600 font-bold uppercase mb-4 block tracking-widest">Seleccionar Activo B2B</label>
+                    
+                    <select id="tickerSelect" class="w-full bg-zinc-900 p-6 rounded-2xl border border-zinc-800 text-2xl font-black text-yellow-500 mb-6 focus:outline-none appearance-none cursor-pointer">
+                        <option value="BTC-USD">BITCOIN (BTC)</option>
+                        <option value="ETH-USD">ETHEREUM (ETH)</option>
+                        <option value="SOL-USD">SOLANA (SOL)</option>
+                        <option value="BNB-USD">BINANCE COIN (BNB)</option>
+                        <option value="XRP-USD">RIPPLE (XRP)</option>
+                        <option value="ADA-USD">CARDANO (ADA)</option>
+                        <option value="AVAX-USD">AVALANCHE (AVAX)</option>
+                        <option value="LINK-USD">CHAINLINK (LINK)</option>
+                        <option value="DOT-USD">POLKADOT (DOT)</option>
+                        <option value="NEAR-USD">NEAR PROTOCOL</option>
+                    </select>
+
+                    <button id="execBtn" onclick="runAnalysis()" class="w-full bg-yellow-600 hover:bg-yellow-500 text-black font-black py-6 rounded-2xl transition-all shadow-xl text-lg uppercase">
                         Ejecutar Gobernanza
                     </button>
-                    <button id="radarBtn" onclick="runRadar()" 
-                            class="w-full mt-4 bg-zinc-900 hover:bg-zinc-800 text-yellow-600 font-bold py-4 rounded-2xl border border-yellow-900/10 transition-all text-[10px] uppercase">
-                        Activar Radar Global (TOP 20)
+                    
+                    <button id="radarBtn" onclick="initRadar()" class="w-full mt-4 bg-zinc-900 hover:bg-zinc-800 text-yellow-600 font-bold py-4 rounded-2xl border border-yellow-900/10 text-[10px] uppercase">
+                        Iniciar Escaneo Global (Lote 1)
                     </button>
-                </div>
-
-                <div class="gold-border bg-zinc-950/40 p-6 rounded-3xl">
-                    <p class="text-[9px] text-yellow-900 font-bold uppercase mb-3 tracking-widest">Protocolo de Intención:</p>
-                    <p class="text-sm italic text-zinc-500 leading-relaxed italic">"Dos espejos se miran y el pez respira por el agua."</p>
                 </div>
             </div>
 
             <div class="lg:col-span-8 flex flex-col gap-8">
                 <div class="gold-border bg-zinc-950 rounded-3xl overflow-hidden shadow-2xl">
-                    <div class="grid grid-cols-3 bg-zinc-900/40 border-b border-zinc-900">
-                        <div class="p-8 border-r border-zinc-900 text-center">
+                    <div class="grid grid-cols-3 bg-zinc-900/40 border-b border-zinc-900 text-center">
+                        <div class="p-8 border-r border-zinc-900">
                             <p class="text-[10px] text-zinc-500 uppercase font-bold mb-2">Precio</p>
-                            <p id="priceDisplay" class="text-3xl font-black">---</p>
+                            <p id="priceDisplay" class="text-3xl font-black text-white">---</p>
                         </div>
-                        <div class="p-8 border-r border-zinc-900 text-center">
+                        <div class="p-8 border-r border-zinc-900">
                             <p class="text-[10px] text-zinc-500 uppercase font-bold mb-2">Status</p>
-                            <p id="statusDisplay" class="text-3xl font-black text-zinc-800">Standby</p>
+                            <p id="statusDisplay" class="text-3xl font-black text-zinc-800 uppercase font-bold">Standby</p>
                         </div>
-                        <div class="p-8 text-center">
-                            <p class="text-[10px] text-yellow-600 uppercase font-bold mb-2">Orden IA</p>
-                            <p id="signalDisplay" class="text-3xl font-black text-zinc-800 uppercase">Waiting</p>
+                        <div class="p-8">
+                            <p class="text-[10px] text-yellow-600 uppercase font-bold mb-2">Veredicto</p>
+                            <p id="signalDisplay" class="text-3xl font-black text-zinc-800 uppercase font-bold">Waiting</p>
                         </div>
                     </div>
-
-                    <div id="analysisOutput" class="p-10 h-[500px] overflow-y-auto text-base text-zinc-400 leading-relaxed font-light">
-                        <p class="opacity-20 italic">> Esperando instrucciones...</p>
+                    <div id="analysisOutput" class="p-10 h-[500px] overflow-y-auto text-base text-zinc-400 leading-relaxed font-light scroll-smooth">
+                        <p class="opacity-20 italic">> Seleccione un activo para iniciar la gobernanza...</p>
                     </div>
                 </div>
 
-                <div id="radarSection" class="hidden gold-border bg-zinc-950 p-10 rounded-3xl shadow-2xl fade-in">
-                    <h3 class="text-yellow-600 text-[11px] font-black uppercase tracking-[0.4em] mb-10 text-center">Escaner Sistémico: TOP 20 Mundial</h3>
-                    <div id="radarTable" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 mb-10"></div>
-                    <div class="bg-black/50 p-8 rounded-2xl border border-zinc-900">
-                        <p class="text-[9px] text-yellow-600 font-bold uppercase mb-4 tracking-widest">Veredicto Sistémico Global:</p>
+                <div id="radarSection" class="hidden gold-border bg-zinc-950 p-10 rounded-3xl shadow-2xl">
+                    <h3 id="radarTitle" class="text-yellow-600 text-[11px] font-black uppercase tracking-[0.4em] mb-10 text-center">Escaneo Sistémico Global</h3>
+                    <div id="radarTable" class="grid grid-cols-2 md:grid-cols-5 gap-4 mb-10"></div>
+                    <div class="bg-black/50 p-8 rounded-2xl border border-zinc-900 mb-6">
                         <div id="radarGlobalAnalysis" class="text-sm text-zinc-500 italic leading-loose"></div>
                     </div>
+                    <button id="nextBatchBtn" onclick="runNextBatch()" class="hidden w-full bg-zinc-900 hover:bg-yellow-600 text-yellow-500 hover:text-black font-black py-4 rounded-2xl transition-all border border-yellow-900/20 uppercase text-xs">
+                        Escanear Siguiente Lote (5 Activos)
+                    </button>
                 </div>
             </div>
         </div>
@@ -119,19 +102,19 @@
 
     <script>
         const CLOUD_RUN_URL = "https://titan-aladdin-298942508038.us-central1.run.app";
-        const KEY = "2026";
+        let currentOffset = 0;
 
         function unlock() {
-            if(document.getElementById('adminKey').value === KEY) {
+            if(document.getElementById('adminKey').value === "2026") {
                 document.getElementById('lockscreen').classList.add('hidden');
                 document.getElementById('mainDashboard').classList.remove('hidden');
-            } else { alert("ACCESO DENEGADO"); }
+            } else { alert("DENEGADO"); }
         }
 
         async function runAnalysis() {
-            const ticker = document.getElementById('tickerInput').value;
+            const ticker = document.getElementById('tickerSelect').value;
             const btn = document.getElementById('execBtn');
-            btn.innerText = "PROCESANDO...";
+            btn.innerText = "CONSULTANDO...";
             btn.disabled = true;
             
             try {
@@ -145,61 +128,57 @@
                 document.getElementById('analysisOutput').innerHTML = `<div class="fade-in text-zinc-300">${cleanText}</div>`;
                 
                 let signal = "NEUTRO";
-                const texto = data.analysis.toUpperCase();
-                if(texto.includes("COMPRA") || texto.includes("OPORTUNIDAD")) signal = "COMPRA";
-                if(texto.includes("RIESGO") || texto.includes("CAUTELA") || texto.includes("VENTA")) signal = "RIESGO";
+                if(data.analysis.toUpperCase().includes("RIESGO") || data.analysis.toUpperCase().includes("CAUTELA")) signal = "RIESGO";
+                if(data.analysis.toUpperCase().includes("COMPRA") || data.analysis.toUpperCase().includes("OPORTUNIDAD")) signal = "COMPRA";
                 
                 document.getElementById('signalDisplay').innerText = signal;
                 document.getElementById('signalDisplay').className = `text-3xl font-black ${signal === 'RIESGO' ? 'text-red-500' : (signal === 'COMPRA' ? 'text-green-500' : 'text-yellow-600')}`;
-            } catch (e) {
-                document.getElementById('analysisOutput').innerHTML = `<p class="text-red-500 font-bold">❌ FALLO DE CONEXIÓN</p>`;
-            } finally {
-                btn.innerText = "Ejecutar Gobernanza";
-                btn.disabled = false;
-            }
+            } catch (e) { document.getElementById('analysisOutput').innerText = "Error de conexión."; }
+            finally { btn.innerText = "Ejecutar Gobernanza"; btn.disabled = false; }
         }
 
-        async function runRadar() {
-            const btn = document.getElementById('radarBtn');
+        function initRadar() {
+            currentOffset = 0;
+            document.getElementById('radarTable').innerHTML = "";
+            runRadarBatch();
+        }
+
+        async function runNextBatch() {
+            runRadarBatch();
+        }
+
+        async function runRadarBatch() {
             const radarSec = document.getElementById('radarSection');
-            const radarTable = document.getElementById('radarTable');
             const radarAnalysis = document.getElementById('radarGlobalAnalysis');
+            const nextBtn = document.getElementById('nextBatchBtn');
             
-            btn.innerText = "ESCANEYANDO...";
             radarSec.classList.remove('hidden');
-            radarAnalysis.innerHTML = "<span class='loading-pulse text-yellow-600'>🌀 ANALIZANDO SALUD GLOBAL...</span>";
-            
+            radarAnalysis.innerHTML = "<span class='loading-pulse text-yellow-600 uppercase'>🌀 Escaneando lote actual...</span>";
+            nextBtn.classList.add('hidden');
+
             try {
-                const res = await fetch(`${CLOUD_RUN_URL}/radar`);
+                const res = await fetch(`${CLOUD_RUN_URL}/radar?limit=5&offset=${currentOffset}`);
                 const data = await res.json();
                 
-                radarTable.innerHTML = data.radar.map(coin => {
-                    const colors = {
-                        'green': { border: 'border-green-500/40', bg: 'bg-green-500/5', dot: 'bg-green-500' },
-                        'red': { border: 'border-red-500/40', bg: 'bg-red-500/5', dot: 'bg-red-500' },
-                        'yellow': { border: 'border-yellow-600/30', bg: 'bg-zinc-900/50', dot: 'bg-yellow-600' }
-                    };
-                    const theme = colors[coin.risk_color] || colors.yellow;
-                    return `
-                        <div class="${theme.bg} ${theme.border} p-5 rounded-2xl border text-center transition-all hover:scale-105 duration-300">
-                            <p class="text-[9px] text-zinc-500 font-bold mb-2">${coin.symbol}</p>
+                data.radar.forEach(coin => {
+                    const theme = coin.risk_color === 'green' ? 'border-green-500/40 bg-green-500/5' : (coin.risk_color === 'red' ? 'border-red-500/40 bg-red-500/5' : 'border-yellow-600/20 bg-zinc-900/50');
+                    document.getElementById('radarTable').innerHTML += `
+                        <div class="${theme} p-5 rounded-2xl border text-center fade-in">
+                            <p class="text-[9px] text-zinc-500 font-bold mb-1">${coin.symbol}</p>
                             <p class="text-base font-black text-white">$${coin.price.toLocaleString()}</p>
-                            <p class="text-[10px] font-bold mt-1 ${coin.change >= 0 ? 'text-green-500' : 'text-red-500'}">
-                                ${coin.change >= 0 ? '▲' : '▼'} ${coin.change.toFixed(2)}%
-                            </p>
-                            <div class="mt-4 h-1 w-full rounded-full bg-zinc-800"><div class="h-full ${theme.dot}" style="width: 100%"></div></div>
+                            <p class="text-[10px] font-bold ${coin.change >= 0 ? 'text-green-500' : 'text-red-500'}">${coin.change.toFixed(2)}%</p>
                         </div>
                     `;
-                }).join('');
+                });
+
+                radarAnalysis.innerHTML = `> Lote ${currentOffset/5 + 1}: <br>${data.global_analysis.replace(/\n/g, '<br>')}`;
+                currentOffset = data.next_offset;
                 
-                radarAnalysis.innerHTML = `<div class="fade-in">${data.global_analysis.replace(/\n/g, '<br>')}</div>`;
-                radarSec.scrollIntoView({ behavior: 'smooth' });
-                
-            } catch (e) {
-                radarAnalysis.innerHTML = "<span class='text-red-500 font-bold'>❌ FALLO CRÍTICO AL SINCRONIZAR CON EL RADAR GLOBAL.</span>";
-            } finally {
-                btn.innerText = "Activar Radar Global (TOP 20)";
-            }
+                if(currentOffset) {
+                    nextBtn.classList.remove('hidden');
+                    nextBtn.innerText = `Escanear Lote Siguiente (${currentOffset/5 + 1}/4)`;
+                }
+            } catch (e) { radarAnalysis.innerHTML = "Error en el Radar."; }
         }
     </script>
 </body>
